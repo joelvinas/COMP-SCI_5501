@@ -19,7 +19,7 @@ from datetime import timedelta  #Used to sum timedeltas
 import random                   #Used to generate a random number
 
 #Import the file directly from the web
-url = 'https://raw.githubusercontent.com/joelvinas/COMP-SCI_5501/23977acbf696053b0f560a6e9969732a13d3ff41/Data/words_alpha.txt'
+url = 'https://github.com/joelvinas/COMP-SCI_5501/blob/aa4391ae9d3f2cb73e89f3b1fd5bc86bfe34fe2b/Assignment2/Data/words_alpha.txt'
 response = requests.get(url)
 
 response.raise_for_status()
