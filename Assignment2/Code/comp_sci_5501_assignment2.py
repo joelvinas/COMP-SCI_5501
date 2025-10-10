@@ -9,14 +9,16 @@ Original file is located at
 
 
 
-from pickle import FALSE
 #Code submitted by Joel Vinas
 import requests                 #Used to import file directly from the web
 import io                       #Used to import file directly from the web
-import pandas as pd             #Used to work with data
+import numpy as np              #Used to work with math functions
+import pandas as pd             #Used to work with data frames
 from datetime import datetime   #Used to determine Now()
 from datetime import timedelta  #Used to sum timedeltas
 import random                   #Used to generate a random number
+import matplotlib.pyplot as plt #Used to generate plots
+import seaborn as sns           #Used to generate aesthetic plots
 
 #Import the file directly from the web
 url = 'https://github.com/joelvinas/COMP-SCI_5501/blob/aa4391ae9d3f2cb73e89f3b1fd5bc86bfe34fe2b/Assignment2/Data/words_alpha.txt'
@@ -63,7 +65,6 @@ class SearchTools:
     for curIteration in results:
       totalComparisons += curIteration.comparisons
     return totalComparisons
-
 
   def getRandomWord(self, dictionary):
     random_int = random.randint(1, len(dictionary))
@@ -239,13 +240,13 @@ for iteration in range(TotalOperations):
   SearchTools.ternary_sorted_results.append(curTreatment)
 
 #5: Compare the number of comparisons made in each treatment
-print("Question 1 Task 5: Search Algorithms completed for {TotalOperations} samples:")
-print(f"Linear Search: {SearchTools.SearchDuration(SearchTools.linear_results)} milliseconds, {format(SearchTools.SearchComparisons(SearchTools.linear_results),',')} comparisons")
-print(f"Sentinel Search: {SearchTools.SearchDuration(SearchTools.sentinel_results)} milliseconds, {format(SearchTools.SearchComparisons(SearchTools.sentinel_results),',')} comparisons")
-print(f"Binary Search (Unsorted): {SearchTools.SearchDuration(SearchTools.binary_results)} milliseconds, {format(SearchTools.SearchComparisons(SearchTools.binary_results),',')} comparisons")
-print(f"Ternary Search (Unsorted): {SearchTools.SearchDuration(SearchTools.ternary_results)} milliseconds, {format(SearchTools.SearchComparisons(SearchTools.ternary_results),',')} comparisons")
-print(f"Binary Search (Presorted): {SearchTools.SearchDuration(SearchTools.binary_sorted_results)} milliseconds, {format(SearchTools.SearchComparisons(SearchTools.binary_sorted_results),',')} comparisons")
-print(f"Ternary Search (Presorted): {SearchTools.SearchDuration(SearchTools.ternary_sorted_results)} milliseconds, {format(SearchTools.SearchComparisons(SearchTools.ternary_sorted_results),',')} comparisons")
+# print("Question 1 Task 5: Search Algorithms completed for {TotalOperations} samples:")
+# print(f"Linear Search: {SearchTools.SearchDuration(SearchTools.linear_results)} milliseconds, {format(SearchTools.SearchComparisons(SearchTools.linear_results),',')} comparisons")
+# print(f"Sentinel Search: {SearchTools.SearchDuration(SearchTools.sentinel_results)} milliseconds, {format(SearchTools.SearchComparisons(SearchTools.sentinel_results),',')} comparisons")
+# print(f"Binary Search (Unsorted): {SearchTools.SearchDuration(SearchTools.binary_results)} milliseconds, {format(SearchTools.SearchComparisons(SearchTools.binary_results),',')} comparisons")
+# print(f"Ternary Search (Unsorted): {SearchTools.SearchDuration(SearchTools.ternary_results)} milliseconds, {format(SearchTools.SearchComparisons(SearchTools.ternary_results),',')} comparisons")
+# print(f"Binary Search (Presorted): {SearchTools.SearchDuration(SearchTools.binary_sorted_results)} milliseconds, {format(SearchTools.SearchComparisons(SearchTools.binary_sorted_results),',')} comparisons")
+# print(f"Ternary Search (Presorted): {SearchTools.SearchDuration(SearchTools.ternary_sorted_results)} milliseconds, {format(SearchTools.SearchComparisons(SearchTools.ternary_sorted_results),',')} comparisons")
 
 
 df_all_results = pd.DataFrame()
@@ -255,14 +256,48 @@ df_all_results = pd.concat([df_all_results, SearchTools.getDataframe("Binary Sea
 df_all_results = pd.concat([df_all_results, SearchTools.getDataframe("Ternary Search (Unsorted)", SearchTools.ternary_results)], ignore_index=True)
 df_all_results = pd.concat([df_all_results, SearchTools.getDataframe("Binary Search (Presorted)", SearchTools.binary_sorted_results)], ignore_index=True)
 df_all_results = pd.concat([df_all_results, SearchTools.getDataframe("Ternary Search (Presorted)", SearchTools.ternary_sorted_results)], ignore_index=True)
+df_all_results['duration_µs'] = df_all_results['duration'].apply(lambda x: int((x.total_seconds() - int(x.total_seconds())) * 1000 * 1000))
 
-df_all_results
+#Question 1 Task 7  Show the comparative analysis for each treatment (for step 5—6):
+df_focus = df_all_results[['iteration','method','comparisons','duration_µs']].copy()
 
-#Question 1 Task 7  Show the comparative analysis for each treatment (for step 5—6) individually in form of:
-#Question 1 Task 7i. Tabulated data
-#Question 1 Task 7ii. Line Chart
+#Question 1 Task 7i. individually in form of Tabulated data: (Step 5) comparisons
+display(df_focus[['method', 'iteration','comparisons']])
+#Question 1 Task 7i. individually in form of Tabulated data: (Step 6) physical time
+display(df_focus[['method', 'iteration','duration_µs']])
+
+#Question 1 Task 7ii. individually in form of Line Chart: (Step 5) comparisons
+sns.lineplot(data=df_focus, x='iteration', y='comparisons',hue='method')
+plt.title('Comparisons by Iteration for each Search method')
+plt.ylabel('Comparisons')
+plt.xticks(range(0, df_focus['iteration'].max() + 1))
+plt.show()
+
+#Question 1 Task 7ii. individually in form of Line Chart:  (Step 6) physical time
+#sns.lineplot(data=df_focus, x='iteration', y='duration_µs',hue='method')
+#plt.title('Duration by Iteration for each Search method')
+#plt.ylabel('Duration (µs)')
+#plt.xticks(range(0, df_focus['iteration'].max() + 1))
+#plt.show()
+
+
+fig, ax = plt.subplots()
+ax.set_yscale('log')
+sns.lineplot(data=df_focus, x='iteration', y='duration_µs',hue='method', ax=ax)
+
+# Add labels and a title
+ax.set_xlabel('iteration')
+ax.set_ylabel('duration (in microseconds in log scale)')
+ax.set_title('Duration by Iteration for each Search method')
+plt.xticks(range(0, df_focus['iteration'].max() + 1))
+
+plt.grid(True, which="both", ls="--", alpha=0.5) # Add a grid
+plt.show()
 
 #Question 1 Task 8  Show the comparative analysis as average time for each algorithm in form of:
 #Question 1 Task 8  i. Tabulated Data
 #Question 1 Task 8  ii. Bar Charts
 #Question 1 Task 8  iii. Exaplain your observations.
+
+
+
