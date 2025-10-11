@@ -19,6 +19,9 @@ import matplotlib.pyplot as plt #Used to generate plots
 import seaborn as sns           #Used to generate aesthetic plots
 import textwrap as tw           #Used to wrap text
 
+print("Colab can be found at: https://colab.research.google.com/drive/1gvPP7SG-P9vtRSJYALxqOtBLwPHU7a-O?usp=sharing")
+print("GitHub Repo is found at: https://github.com/joelvinas/COMP-SCI_5501/blob/main/Assignment2/COMP_SCI_5501_Assignment2.ipynb")
+
 #Import the file directly from the web
 url = 'https://raw.githubusercontent.com/joelvinas/COMP-SCI_5501/aa4391ae9d3f2cb73e89f3b1fd5bc86bfe34fe2b/Assignment2/Data/words_alpha.txt'
 response = requests.get(url)
