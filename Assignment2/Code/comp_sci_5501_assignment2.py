@@ -247,7 +247,6 @@ print(f"Ternary Search (Unsorted): {SearchTools.SearchDuration(SearchTools.terna
 print(f"Binary Search (Presorted): {SearchTools.SearchDuration(SearchTools.binary_sorted_results)} milliseconds, {format(SearchTools.SearchComparisons(SearchTools.binary_sorted_results),',')} comparisons")
 print(f"Ternary Search (Presorted): {SearchTools.SearchDuration(SearchTools.ternary_sorted_results)} milliseconds, {format(SearchTools.SearchComparisons(SearchTools.ternary_sorted_results),',')} comparisons")
 
-
 df_all_results = pd.DataFrame()
 df_all_results = pd.concat([df_all_results, SearchTools.getDataframe("Linear Search", SearchTools.linear_results)], ignore_index=True)
 df_all_results = pd.concat([df_all_results, SearchTools.getDataframe("Sentinel Search", SearchTools.sentinel_results)], ignore_index=True)
@@ -262,6 +261,7 @@ df_focus = df_all_results[['iteration','method','comparisons','duration_µs']].c
 
 #Question 1 Task 7i. individually in form of Tabulated data: (Step 5) comparisons
 display(df_focus[['method', 'iteration','comparisons']])
+
 #Question 1 Task 7i. individually in form of Tabulated data: (Step 6) physical time
 display(df_focus[['method', 'iteration','duration_µs']])
 
@@ -295,9 +295,8 @@ df_summarytable = df_summary.rename(columns={'comparisons': 'mean comparisons', 
 #Question 1 Task 8  i. Tabulated Data
 display(df_summarytable)
 
-#Question 1 Task 8  ii. Bar Charts
+#Question 1 Task 8  ii. Bar Charts: Comparison
 
-#plt.figure(figsize=(10, 6)) # Increase figure size
 ax = plt.subplots()[1]
 ax.set_yscale('log')
 sns.barplot(data=df_summary, x='method', y='comparisons')
@@ -310,11 +309,12 @@ ax.bar_label(ax.containers[0])
 plt.grid(True, which="both", ls="--", alpha=0.5) # Add a grid
 plt.show()
 
+#Question 1 Task 8  iii. Exaplain your observations.
 comparisons_observations = "The difference in the quantity of comparisons between Linear/Sentinel search and Binary/Ternary search is so extreme, in order to visualize both effectively we need to look in a logarithmic scale. With this particular sample dataset, even though the data wasn't sorted as part of the operation, the dictionary came presorted. For Linear/Sentinel search, this means that the further along in the alphabet that the first letter of the search word is, the longer that the Linear/Sentinel searches must search before they find the result. This mitigates most of the advantage of Linear/Sentinel searches, namely that they search against unordered data where placement of the search object is random. This nuance could be clearer if the brute-force algorithms were tested against a sorted vs shuffled dictionary. The results may be improved for linear/sentinel search within a shuffled dictionary as the chances of finding words with a starting letter further along the alphabet is random. In either event, the number of comparisons which would be made for a linear/sentinel search will consistently underperform those made by binary/ternary search.\nIt is worth noting that the mean comparisons for Binary search tend to be higher than that of Ternary search. This is true regardless of whether the dictionary is presorted or not."
 wrapped_text = tw.fill(comparisons_observations, width=70)
 print(f"Comparisons Observations:\n{wrapped_text}")
 
-#plt.figure(figsize=(10, 6)) # Increase figure size
+#Question 1 Task 8  ii. Bar Charts: Duration
 ax = plt.subplots()[1]
 ax.set_yscale('log')
 sns.barplot(data=df_summary, x='method', y='duration_µs', ax=ax)
@@ -443,4 +443,5 @@ observations = "On average, it is clear that the 2D search method results in few
 wrapped_text = tw.fill(observations, width=70)
 print(f"Observations:\n{wrapped_text}")
 
-print("Code can be found at https://colab.research.google.com/drive/1gvPP7SG-P9vtRSJYALxqOtBLwPHU7a-O?usp=sharing")
+print("Colab can be found at: https://colab.research.google.com/drive/1gvPP7SG-P9vtRSJYALxqOtBLwPHU7a-O?usp=sharing")
+print("GitHub Repo is found at: https://github.com/joelvinas/COMP-SCI_5501/blob/main/Assignment2/COMP_SCI_5501_Assignment2.ipynb")
